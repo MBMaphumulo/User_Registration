@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Screen Capture</title>
+		
+		<link href="css/main.css" rel="stylesheet" />
+	</head>
+	<body>
+
+
+
+		<div id="status"></div>
+
+		<div class="booth">
+			video
+			<video id="video" width="400" height="300"></video>
+			<a href="#" id="capture" class="booth-capture-button">Take a photo</a>
+		</div>
+		<div class="imageDisplay">
+			canvas
+			<canvas id="canvas" width="400" height="300"></canvas>
+
+			<table>
+				<tr>
+					<td>
+						<label>Name : </label>
+					</td>
+					<td>
+						<input type="text" id="uname" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Surname :</label>
+					</td>
+					<td>
+						<input type="text" id="surname" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button onclick="send_info()">Save Info </button>
+					</td>
+				</tr>
+			</table>
+
+		<a href="saveInfo.php">View users</a>
+		</div>
+
+
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script src="js/main.js"></script>
+		<script>
+			function send_info(){
+				var name = document.getElementById('uname').value
+					surname = document.getElementById('surname').value
+					imgUrl = canvas.toDataURL('image/jpeg');
+
+
+					alert("Name : "+name+"\nSurname : "+surname+"\nImage : "+imgUrl);
+
+					var hr = new XMLHttpRequest();
+				    var url = "saveInfo.php";
+				    var vars = "uname="+name+"&&surname="+surname+"&&img="+imgUrl;
+				    
+				    hr.open("POST",url,true);
+				    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				    hr.onreadystatechange = function(){
+				        if(hr.readyState == 4 && hr.status == 200){
+				            var return_data = hr.responseText;
+				            document.getElementById("status").innerHTML = return_data;
+				            alert("Move");
+				            window.location.href = 'saveInfo.php';
+				        }
+				    }
+				    
+					hr.send(vars);
+					document.getElementById("status").innerHTML = "processing ... ";
+			}
+		</script>
+	</body>
+</html>
